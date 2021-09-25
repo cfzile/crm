@@ -1,6 +1,7 @@
 import logging
 
 import plotly.graph_objs as go
+from django.db.models import Q
 from plotly.graph_objs.scatter import Marker
 from plotly.offline import *
 
@@ -36,11 +37,14 @@ def get_full_context(request, context):
     general_context = {"events": events.get(request),
                        'constance': constance,
                        'auth_profile': auth_profile,
-                       'competences': Competence.objects.all(),
-                       'grade_templates': GradeTemplate.objects.all(),
+                       'competences': Competence.objects.all().filter(
+                           Q(prototype=auth_profile.prototype) | (auth_profile.prototype == -1)),
+                       'grade_templates': GradeTemplate.objects.all().filter(
+                           Q(prototype=auth_profile.prototype) | (auth_profile.prototype == -1)),
                        'scheduled_to_user': scheduled_to_user,
                        'scheduled_by_user': scheduled_by_user,
-                       'tasks': Task.objects.all(),
+                       'tasks': Task.objects.all().filter(
+                           Q(owner_user_id=request.user.id) | Q(executor_user_id=request.user.id)),
                        'profiles': Profile.objects.all()}
     return {**context, **general_context}
 
