@@ -10,8 +10,9 @@
 
 
     <div class="templates">
-        <h2>Отчет</h2>
+        <h1>Отчет</h1>
 
+        <h2>Анализ</h2>
         Имя теста: {{ schedule.grade_template.name }} <br>
         Тип теста: {{ constance.GRADE_TEMPLATE_TYPES_DICT|get_item:schedule.grade_template.type }} <br>
 
@@ -23,15 +24,16 @@
 
         <br><br>
 
-        Ответы:
+        Ответы: <br><br>
+
         <div style="width:50%; height: 50%">
             {{ graphic|safe }}
-        </div>
+        </div><br><br>
 
         {% for a, b in comps %}
             {{ a }}) {{ b }}<br>
         {% endfor %}
-    </div>
+    </div><br>
 
     <div class="templates">
         <h2>Рекомендации</h2>

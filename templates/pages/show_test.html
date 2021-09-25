@@ -8,8 +8,8 @@
 
 {% block content %}
     <div class="templates" style="float:left; width: 100%">
-        <form action="{% url 'pass_grade' %}" method="post">
-            <h1>{{ grade.name }}</h1> <br>
+        <form action="{% url 'pass_grade' %}" method="post" style="margin-left: 0; height:auto; width: 100%">
+            <h1>{{ grade.name }}</h1>
             {% csrf_token %}
             <input type="hidden" name="grade_template" value="{{ grade.id }}">
             <input type="hidden" name="schedule" value="{{ schedule.id }}">
@@ -29,7 +29,9 @@
                 </div><br>
             {% endfor %}
 
+
             {% if pass_allow %}
+                <br>
                 <div class="item">
                     <input type="submit" value="Отправить">
                 </div>
