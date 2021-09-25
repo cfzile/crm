@@ -1,0 +1,47 @@
+{% extends 'index.html' %}
+
+{% load static %}
+{% load general %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="templates">
+        <h2>Отчет</h2>
+
+        Имя теста: {{ schedule.grade_template.name }} <br>
+        Тип теста: {{ constance.GRADE_TEMPLATE_TYPES_DICT|get_item:schedule.grade_template.type }} <br>
+
+        <br><br>
+
+        Оценка рук.: {{ schedule.owner_score }}<br>
+        Оценка сотрудником.: {{ schedule.subordinate_score }}<br>
+        Максимальная оценка: {{ schedule.grade_template.score }}
+
+        <br><br>
+
+        Ответы:
+        <div style="width:50%; height: 50%">
+            {{ graphic|safe }}
+        </div>
+
+        {% for a, b in comps %}
+            {{ a }}) {{ b }}<br>
+        {% endfor %}
+    </div>
+
+    <div class="templates">
+        <h2>Рекомендации</h2>
+
+        <ul>
+            <li>Вариант 1</li>
+            <li>Вариант 2</li>
+            <li>Вариант 3</li>
+            <li>Вариант 4</li>
+        </ul>
+    </div>
+
+{% endblock %}

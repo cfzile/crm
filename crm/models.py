@@ -59,6 +59,7 @@ class GradeTemplate(models.Model):
     name = models.CharField(max_length=100, default='')
     type = models.IntegerField(null=False)
     questions = models.ManyToManyField(Question())
+    score = models.IntegerField(null=False, default=0)
 
 
 class Schedule(models.Model):

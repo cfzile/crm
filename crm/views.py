@@ -1,5 +1,9 @@
 import logging
 
+import plotly.graph_objs as go
+from plotly.graph_objs.scatter import Marker
+from plotly.offline import *
+
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -145,6 +149,11 @@ def add_grader(request):
         type = request.POST.get('type')
 
         questions_dict = {i: [None, '', None] for i in range(100)}
+        obj = GradeTemplate.objects.create(name=name, type=type,
+                                           prototype=prototype,
+                                           owner=Profile.objects.get(user_id=request.user.id))
+
+        obj.score = 0
 
         for key in request.POST.keys():
             if key[:len('t1_q_')] == 't1_q_':
@@ -154,10 +163,8 @@ def add_grader(request):
             if key[:len('t2_q_')] == 't2_q_':
                 ind = len('t2_q_')
                 questions_dict[int(key[ind:])] = [2, '', int(request.POST.get('t2_q_' + key[ind:]))]
-
-        obj = GradeTemplate.objects.create(name=name, type=type,
-                                           prototype=prototype,
-                                           owner=Profile.objects.get(user_id=request.user.id))
+                obj.score += max([ind.value for ind in Competence.objects.get(
+                    id=int(request.POST.get('t2_q_' + key[ind:]))).indicators.all()])
 
         for key, value in questions_dict.items():
             if value[0] is None:
@@ -320,5 +327,48 @@ def add_subordinate(request):
 
 
 def get_report(request, schedule_id):
+    sch = Schedule.objects.get(id=schedule_id)
+
+    owner_id = sch.owner
+    subordinate_id = sch.subordinate
+
+    answer_ruk = GradeResults.objects.get(schedule_id=schedule_id, executor_id=owner_id)
+    answer_sot = GradeResults.objects.get(schedule_id=schedule_id, executor_id=subordinate_id)
+
+    fig = go.Figure()
+
+    def get_scatter(answer, name):
+        p = 1
+        x, ruk_y = [], []
+        for ans in answer.answers.all():
+            if ans.answer_t2 is None:
+                continue
+            x.append(p)
+            ruk_y.append(ans.answer_t2.value)
+            p += 1
+
+        return go.Scatter(x=x, y=ruk_y,
+                          mode='markers+lines',
+                          marker=Marker(symbol='0'),
+                          opacity=0.8, name=name)
+
+    p = 1
+    comps = []
+    for ans in answer_sot.answers.all():
+        if ans.answer_t2 is None:
+            continue
+        comps.append((p, ans.question.competence.name))
+        p += 1
+
+    fig.add_trace(get_scatter(answer_ruk, 'Руководитель'))
+    fig.add_trace(get_scatter(answer_sot, 'Сотрудник'))
+
+    plt_div = plot(fig, output_type='div')
+
     return render(request, "pages/report.html",
-                  get_full_context(request, {'Title': 'Отчет'}))
+                  get_full_context(request, {'Title': 'Отчет',
+                                             'schedule': sch,
+                                             'answer_ruk': answer_ruk,
+                                             'answer_sot': answer_sot,
+                                             'graphic': plt_div,
+                                             'comps': comps}))
