@@ -15,6 +15,20 @@
                     {{ item }} <br>
                 </div><br>
             {% endfor %}
+
+            {% if auth_profile.prototype == -1 %}
+                <div class="item">
+                    <label> Прототип:</label>
+                    <select name="prototype">
+                        <option value="0">-</option>
+                        <option value="1">Кафе</option>
+                        <option value="2">Офис</option>
+                        <option value="3">Магазин</option>
+                    </select>
+                </div><br>
+            {% endif %}
+            <br>
+
             <div id="questions">
             </div>
 
@@ -58,6 +72,18 @@
             {% csrf_token %}
             <h1>Создать компетенцию</h1>
 
+            {% if auth_profile.prototype == -1 %}
+                <div class="item">
+                    <label> Прототип:</label>
+                    <select name="prototype">
+                        <option value="0">-</option>
+                        <option value="1">Кафе</option>
+                        <option value="2">Офис</option>
+                        <option value="3">Магазин</option>
+                    </select>
+                </div><br>
+            {% endif %}
+
             <div class="item">
                 <label>Название:</label>
                 <input type="text" name="name" placeholder="name">
@@ -91,7 +117,8 @@
 
     <div class="templates">
         <h2>Тесты</h2>
-        <button id="create_grader">Создать тест</button><br><br>
+        <button id="create_grader">Создать тест</button>
+        <br><br>
         <table>
             <tr>
                 <th>Название</th>
@@ -110,7 +137,8 @@
 
     <div class="templates">
         <h2>Компетенции</h2>
-        <button id="create_competence">Создать компетенцию</button><br><br>
+        <button id="create_competence">Создать компетенцию</button>
+        <br><br>
         <table>
             <tr>
                 <th>Название</th>

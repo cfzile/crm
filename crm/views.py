@@ -140,6 +140,7 @@ def grade_templates(request):
 
 def add_grader(request):
     if request.method == 'POST':
+        prototype = request.POST.get('prototype')
         name = request.POST.get('name')
         type = request.POST.get('type')
 
@@ -154,7 +155,9 @@ def add_grader(request):
                 ind = len('t2_q_')
                 questions_dict[int(key[ind:])] = [2, '', int(request.POST.get('t2_q_' + key[ind:]))]
 
-        obj = GradeTemplate.objects.create(name=name, type=type, owner=Profile.objects.get(user_id=request.user.id))
+        obj = GradeTemplate.objects.create(name=name, type=type,
+                                           prototype=prototype,
+                                           owner=Profile.objects.get(user_id=request.user.id))
 
         for key, value in questions_dict.items():
             if value[0] is None:
@@ -172,6 +175,7 @@ def add_grader(request):
 
 def add_competence(request):
     if request.method == 'POST':
+        prototype = request.POST.get('prototype')
         name = request.POST.get('name')
         indicators = {i: [None, None] for i in range(0, 1 + len(request.POST.keys()) // 2)}
 
@@ -183,7 +187,7 @@ def add_competence(request):
                 ind = len('indicator_value')
                 indicators[int(key[ind:])][1] = request.POST.get('indicator_value' + key[ind:])
 
-        competence = Competence.objects.create(name=name, description='')
+        competence = Competence.objects.create(name=name, description='', prototype=prototype)
 
         for key, value in indicators.items():
             if value[0] is None or value[1] is None:

@@ -6,6 +6,7 @@ from django.utils import timezone
 
 
 class Profile(models.Model):
+    prototype = models.IntegerField(null=True, blank=True, default=-1)
     user = models.OneToOneField(User, related_name='user', related_query_name='user', on_delete=models.CASCADE,
                                 primary_key=True)
     name = models.CharField(max_length=100, default='')
@@ -30,6 +31,7 @@ class Indicator(models.Model):
 
 
 class Competence(models.Model):
+    prototype = models.IntegerField(null=True, blank=True, default=0)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     indicators = models.ManyToManyField(Indicator())
@@ -51,6 +53,7 @@ class Answer(models.Model):
 
 
 class GradeTemplate(models.Model):
+    prototype = models.IntegerField(null=True, blank=True, default=0)
     owner = models.ForeignKey(Profile, related_name='owner', related_query_name='owner',
                               on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100, default='')
