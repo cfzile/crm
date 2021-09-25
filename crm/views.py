@@ -39,6 +39,8 @@ def get_full_context(request, context):
         scheduled_by_user = Schedule.objects.all().filter(owner=auth_profile.user.id)
         tasks = Task.objects.all().filter(Q(owner_id=request.user.id) | Q(executor_id=request.user.id))
         print(auth_profile.prototype)
+        for com in competences:
+            print(com)
         if auth_profile.prototype != -1:
             competences = competences.filter(Q(prototype=auth_profile.prototype))
             grade_templates = grade_templates.filter(Q(prototype=auth_profile.prototype))
