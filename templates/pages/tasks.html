@@ -1,16 +1,96 @@
 {% extends 'index.html' %}
 
 {% block content %}
-    <button id="">Создать задачу</button>
 
-    <table>
-        <tr>
-            <th>Название</th>
-            <th>Тип</th>
-            <th>Сложность</th>
-            <th>Исполнитель</th>
-            <th>Статус</th>
-            <th>Оценка выполнения</th>
-        </tr>
-    </table>
+    <div class="additional_windows" id="create_task_form">
+        <form method="post" action="{% url 'create_task' %}">
+            {% csrf_token %}
+            <h1>Создать задачу</h1>
+            <div class="item">
+                <label>Описание:</label><br>
+                <input type="text" name="description" placeholder="описание">
+            </div>
+            <br>
+            <div class="item">
+                <label>Подчиненный:</label><br>
+                <select name="subordinate">
+                    {% for subordinate in auth_profile.subordinates %}
+                        <option value="{{ subordinate.user.id }}">{{ subordinate.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div class="item">
+                <label>Начало:</label>
+                <input type="datetime-local" name="from">
+            </div>
+            <br>
+            <div class="item">
+                <label>Крайний срок:</label>
+                <input type="datetime-local" name="to">
+            </div>
+            <br>
+
+            <div class="item">
+                <label>Тест:</label><br>
+                <select name="grade_template">
+                    <option value="-1"></option>
+                    {% for grade in grade_templates %}
+                        <option value="{{ grade.id }}">{{ grade.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+
+            <div class="item">
+                <input type="submit" value="Создать">
+            </div>
+            <br>
+            <div class="item">
+                <div class="form_button" id="close_create_task_form">Отмена</div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="templates">
+        <h3>Задачи</h3><br>
+
+        <button id="create_task">Создать задачу</button>
+
+        <table>
+            <tr>
+                <th>Описание</th>
+{#                <th>Тип</th>#}
+{#                <th>Сложность</th>#}
+                <th>Статус</th>
+                <th>От</th>
+                <th>До</th>
+                <th>Создатель</th>
+                <th>Исполнитель</th>
+                <th>Оценка выполнения</th>
+            </tr>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>{{ task.date_from }}</td>
+                    <td>{{ task.date_to }}</td>
+                    <td>{{ task.owner.name }}</td>
+                    <td>{{ task.executor.name }}</td>
+                    <td><a href="grade{{ task.grade_template.id }}">{{ task.grade_template.name }}</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <script type="text/javascript">
+            $('#create_task').on('click', function () {
+                $('#create_task_form').css('display', 'inline-block');
+            });
+
+            $('#close_create_task_form').on('click', function () {
+                $('#create_task_form').css('display', 'none');
+            });
+        </script>
+    </div>
 {% endblock %}

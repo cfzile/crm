@@ -11,6 +11,7 @@ urlpatterns = [
     path('sign_in', views.sign_in, name='sign_in'),
     path('add_grader', views.add_grader, name='add_grader'),
     path('add_competence', views.add_competence, name='add_competence'),
+    path('create_task', views.create_task, name='create_task'),
     path('schedule_test', views.schedule_test, name='schedule_test'),
     path('pass_grade', views.pass_grade, name='pass_grade'),
     path('sign_up', views.sign_up, name='sign_up'),

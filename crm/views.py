@@ -10,7 +10,7 @@ from django.template import loader
 import crm.events as events
 from crm import constance
 from crm.forms import UserForm, GraderForm
-from crm.models import Profile, Competence, GradeTemplate, Question, Schedule, Indicator
+from crm.models import Profile, Competence, GradeTemplate, Question, Schedule, Indicator, Task
 
 logger = logging.getLogger('crm')
 
@@ -35,7 +35,8 @@ def get_full_context(request, context):
                        'competences': Competence.objects.all(),
                        'grade_templates': GradeTemplate.objects.all(),
                        'scheduled_to_user': scheduled_to_user,
-                       'scheduled_by_user': scheduled_by_user}
+                       'scheduled_by_user': scheduled_by_user,
+                       'tasks': Task.objects.all()}
     return {**context, **general_context}
 
 
@@ -203,7 +204,6 @@ def schedule_test(request):
         date_from = request.POST.get('from')
         date_to = request.POST.get('to')
 
-        print(request.POST.keys())
         Schedule.objects.create(owner=owner, grade_template=GradeTemplate.objects.get(id=grade_template),
                                 subordinate=subordinate, date_to=date_to,
                                 date_from=date_from).save()
@@ -220,3 +220,26 @@ def get_grade(request, test_id):
                   get_full_context(request, {'Title': 'Пройдите тест',
                                              'grade': GradeTemplate.objects.get(id=test_id),
                                              'competences': Competence.objects.all()}))
+
+
+def create_task(request):
+    if request.method == 'POST':
+        owner = request.user.id
+        description = request.POST.get('description')
+        executor = request.POST.get('subordinate')
+        grade_template = request.POST.get('grade_template')
+        date_from = request.POST.get('from')
+        date_to = request.POST.get('to')
+
+        grade_template_obj = None
+        try:
+            grade_template_obj = GradeTemplate.objects.get(id=grade_template)
+        except:
+            pass
+
+        Task.objects.create(owner=Profile.objects.get(user_id=owner), description=description,
+                            grade_template=grade_template_obj,
+                            executor=Profile.objects.get(user_id=executor), date_to=date_to,
+                            date_from=date_from).save()
+
+    return redirect('tasks')

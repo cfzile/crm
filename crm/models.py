@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import *
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 
 class Profile(models.Model):
@@ -21,11 +22,6 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse("profile", kwargs={"user_id": self.user_id})
-
-
-class Task(models.Model):
-    task_type = models.IntegerField(null=False)
-    task_status = models.IntegerField(null=False, default=0)
 
 
 class Indicator(models.Model):
@@ -63,3 +59,17 @@ class Schedule(models.Model):
     date_from = models.DateTimeField(null=False)
     date_to = models.DateTimeField(null=False)
     status = models.IntegerField(null=False, default=0)
+
+
+class Task(models.Model):
+    description = models.CharField(max_length=200, default='')
+    owner = models.ForeignKey(Profile, related_name='task_owner', related_query_name='task_owner',
+                              on_delete=models.CASCADE, null=True)
+    executor = models.ForeignKey(Profile, related_name='task_executor', related_query_name='task_executor',
+                                 on_delete=models.CASCADE, null=True)
+    date_from = models.DateTimeField(null=False, default=timezone.now())
+    date_to = models.DateTimeField(null=False, default=timezone.now())
+    status = models.IntegerField(null=False, default=0)
+    grade_template = models.ForeignKey(GradeTemplate, related_name='task_grade_template',
+                                       related_query_name='task_grade_template',
+                                       on_delete=models.CASCADE, null=True)
