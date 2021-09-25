@@ -3,15 +3,15 @@
 {% block content %}
     <div class="templates" style="float:left">
         <h1>{{ requested_profile.name }}</h1> <br>
-        Роль: {{ constance.ROLE_DICT|get_item:requested_profile.user_type }} <br>
-        Должность: {{ requested_profile.user_position }} <br>
-        Тип: {{ constance.PROTOTYPE_DICT|get_item:requested_profile.prototype }}<br>
+        Роль: {{ constance.ROLE_DICT|get_item:requested_profile.user_type }} <br><br>
+        Должность: {{ requested_profile.user_position }} <br><br>
+        Тип: {{ constance.PROTOTYPE_DICT|get_item:requested_profile.prototype }}<br><br>
         {% if requested_profile.manager_profiles|length > 0 %}
             Руководители:
             {% for manager in requested_profile.manager_profiles %}
                 <a href="id{{ manager.user.id }}">{{ manager.name }}</a>,
             {% endfor %}
-            <br>
+            <br><br>
         {% endif %}
 
         {% if requested_profile.subordinate_profiles|length > 0 %}

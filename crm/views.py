@@ -14,6 +14,7 @@ from django.template import loader
 
 import crm.events as events
 from crm import constance
+from crm.constance import *
 from crm.forms import UserForm, GraderForm
 from crm.models import Profile, Competence, GradeTemplate, Question, Schedule, Indicator, Task, Answer, GradeResults
 
@@ -136,23 +137,25 @@ def profile(request, user_id):
     return render(request, "pages/profile.html",
                   get_full_context(request,
                                    {'Title': requested_profile.name,
-                                    'requested_profile': requested_profile}))
+                                    'requested_profile': requested_profile,
+                                    'chosen_page': PROFILE_PAGE_NAME}))
 
 
 def tasks(request):
     return render(request, "pages/tasks.html",
-                  get_full_context(request, {'Title': 'Задачи'}))
+                  get_full_context(request, {'Title': 'Задачи', 'chosen_page': TASKS_PAGE_NAME}))
 
 
 def grade(request):
     return render(request, "pages/grade.html",
-                  get_full_context(request, {'Title': 'Оценка'}))
+                  get_full_context(request, {'Title': 'Оценка', 'chosen_page': TESTS_PAGE_NAME}))
 
 
 def grade_templates(request):
     return render(request, "pages/grade_templates.html",
                   get_full_context(request, {'Title': 'Шаблоны',
                                              'create_grader_form': GraderForm(),
+                                             'chosen_page': TEMPLATES_PAGE_NAME,
                                              'competences': Competence.objects.all()}))
 
 
@@ -332,7 +335,7 @@ def create_task(request):
 
 def subordinates(request):
     return render(request, "pages/subordinates.html",
-                  get_full_context(request, {'Title': 'Подчиненные'}))
+                  get_full_context(request, {'Title': 'Подчиненные', 'chosen_page': SUBORDINATES_PAGE_NAME}))
 
 
 def add_subordinate(request):

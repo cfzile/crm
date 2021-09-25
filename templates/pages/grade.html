@@ -14,7 +14,7 @@
                         <option value="{{ grade.id }}">{{ grade.name }}</option>
                     {% endfor %}
                 </select>
-            </div>
+            </div><br>
             <div class="item">
                 <label>Подчиненный:</label><br>
                 <select name="subordinate">
@@ -22,16 +22,17 @@
                         <option value="{{ subordinate.user.id }}">{{ subordinate.name }}</option>
                     {% endfor %}
                 </select>
-            </div>
+            </div><br>
             <div class="item">
                 <label>Старт:</label>
                 <input type="datetime-local" name="from">
-            </div>
+            </div><br>
             <div class="item">
                 <label>Финиш:</label>
                 <input type="datetime-local" name="to">
-            </div>
+            </div><br>
 
+            <br>
             <div class="item">
                 <input type="submit" value="Назначить">
             </div>
@@ -45,13 +46,14 @@
 
     <div class="templates">
 
-        <h2>Тесты</h2>
+        <h1>Тесты</h1>
 
         <button id="schedule_test">Назначить тест</button>
 
         <br><br>
 
-        Мне назначенные:
+        <h3>Мне назначенные</h3>
+        <br>
         <table>
             <tr>
                 <th>Название</th>
@@ -76,8 +78,9 @@
         </table>
 
         <br>
-        Мною назначенные:
+        <h3>Мною назначенные</h3>
         <br>
+
         <table>
             <tr>
                 <th>Название</th>

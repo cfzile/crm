@@ -1,8 +1,8 @@
 body {
     margin: 0;
     padding: 0;
-    background: white;
     font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    background: #f6f6f6;
 }
 
 header {
@@ -11,8 +11,9 @@ header {
     width: 16%;
     height: 100%;
     padding: 0 2%;
-    background: #028fcc;
+    background: white;
     float: left;
+    box-shadow: 2px 0px 5px 0px rgba(50, 50, 50, 0.25);
 }
 
 header #logo {
@@ -21,7 +22,7 @@ header #logo {
     display: inline-block;
     text-transform: uppercase;
     font-size: 3em;
-    color: #f4f4f4;
+    color: #171714;
     width: 100%;
     font-weight: bold;
     text-align: center;
@@ -46,7 +47,9 @@ header .searching input {
 }
 
 header menu {
-    text-align: center;
+    margin-top: 30%;
+    margin-left: 10%;
+    text-align: left;
     display: inline-block;
     vertical-align: middle;
     width: 100%;
@@ -57,19 +60,19 @@ header menu li {
     display: inline-block;
     margin-right: 5%;
     margin-top: 10%;
-    text-decoration: underline;
+    /*text-decoration: underline;*/
 }
 
 header menu li a {
-    color: white;
+    color: #171714;
     text-decoration: none;
-    text-transform: uppercase;
 }
 
 .main_block {
-    padding: 5% 5%;
+    padding: 2% 5%;
     width: 70%;
     float: left;
+    background: #f6f6f6;
     margin-left: 20%;
 }
 
@@ -105,18 +108,24 @@ header .searching form {
 }
 
 .additional_windows form, #create_competence_form form {
-    background: white;
+    background: #f6f6f6;
     display: inline-block;
     width: 40%;
     margin-left: 30%;
-    height: 90%;
+    /*height: 90%;*/
     margin-top: 3%;
+    padding: 3% 0;
     /*vertical-align: middle;*/
     text-align: center;
     overflow: auto;
 }
 
-.additional_windows form input[type="text"], .additional_windows form select,
+.additional_windows form h1{
+    margin: 0;
+}
+
+.additional_windows form input[type="text"], .additional_windows form input[type="datetime-local"],
+.additional_windows form select,
 #create_competence_form form input[type="text"], #create_competence_form form select {
     width: 100%;
     padding: 3% 8%;
@@ -143,7 +152,7 @@ header .searching form {
     width: 100%;
     background: #f4f4f4;
     text-align: center;
-    margin-top: 10%;
+    margin-top: 5%;
     border: 1px solid grey;
 }
 
@@ -154,11 +163,17 @@ header .searching form {
     display: inline-block;
     width: 100%;
     padding: 3% 8%;
-    text-transform: lowercase;
+    text-transform: uppercase;
+    float: right;
+    border: 0;
+    margin-bottom: 2%;
+    /*border: 1px solid grey;*/
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.25);
+    /*border-radius: 10px;*/
+    background: #175da3;
     font-size: 1em;
-    border: 1px solid grey;
-    background: green;
     color: white;
+    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 }
 
 .additional_windows .form_button,
@@ -168,11 +183,17 @@ header .searching form {
     display: inline-block;
     width: 83%;
     padding: 3% 8%;
-    text-transform: lowercase;
     font-size: 1em;
-    border: 1px solid grey;
-    background: red;
+    background: #d53333;
     color: white;
+    text-transform: uppercase;
+    float: right;
+    border: 0;
+    margin-bottom: 2%;
+    /*border: 1px solid grey;*/
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.25);
+    /*border-radius: 10px;*/
+    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 }
 
 header .out {
@@ -183,14 +204,17 @@ header .out {
 header button {
     text-transform: uppercase;
     display: inline-block;
-    width: 80%;
+    width: 100%;
     border: 0;
+    border-top: 1px solid grey;
+    box-shadow: -2px -1px 5px 0px rgba(50, 50, 50, 0.25);
     padding: 5%;
     bottom: 1%;
-    border-radius: 5px;
-    color: white;
+    /*border-radius: 10px;*/
+    font-size: 1em;
+    color: #171714;
     position: absolute;
-    background: #013440;
+    background: white;
     font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 }
 
@@ -203,4 +227,29 @@ table {
 table td, table th {
     border: 1px solid black;
     padding: 1% 2%;
+}
+
+#create_task, #schedule_test, #create_grader, #create_competence {
+    text-transform: uppercase;
+    display: inline-block;
+    float: right;
+    border: 0;
+    margin-bottom: 2%;
+    /*border: 1px solid grey;*/
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.25);
+    padding: 1% 2%;
+    /*border-radius: 10px;*/
+    background: #175da3;
+    font-size: 1em;
+    color: white;
+    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+}
+
+table th {
+    background: #175da3;
+    color: white;
+}
+
+table td a{
+    color: #171714;
 }

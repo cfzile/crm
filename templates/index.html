@@ -19,13 +19,14 @@
 
 {% if auth_profile.user.is_authenticated %}
     <header>
-        <div id="logo">CRM</div>
+        <div id="logo"><img src="{% static 'img/logo.png' %}" width="100%"></div>
         <menu>
             {% for PAGE_NAME, PAGE_URL in constance.PAGES %}
-                <li><a href="{% url PAGE_URL %}">{{ PAGE_NAME }}</a></li><br>
+                <li><a style="{% if chosen_page == PAGE_NAME %}color:#175da3; text-decoration: underline;{% endif %}"
+                       href="{% url PAGE_URL %}">{{ PAGE_NAME }}</a></li><br>
             {% endfor %}
         </menu>
-        <div class="out">
+        <div class="out" style="position:absolute; left:0;bottom:0;">
             <a href="{% url "sign_out" %}"><button>Выход</button></a>
         </div>
     </header>
