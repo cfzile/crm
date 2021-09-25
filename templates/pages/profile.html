@@ -9,7 +9,7 @@
         {% if requested_profile.manager_profiles|length > 0 %}
             Руководители:
             {% for manager in requested_profile.manager_profiles %}
-                {{ manager.user.username }}<br>
+                <a href="id{{ manager.user.id }}">{{ manager.name }}</a>,
             {% endfor %}
             <br>
         {% endif %}
@@ -17,7 +17,7 @@
         {% if requested_profile.subordinate_profiles|length > 0 %}
             Подчиненные:
             {% for subordinate in requested_profile.subordinate_profiles %}
-                {{ subordinate.user.username }},
+                <a href="id{{ subordinate.user.id }}">{{ subordinate.name }}</a>,
             {% endfor %}
         {% endif %}
 

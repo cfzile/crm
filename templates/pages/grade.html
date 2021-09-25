@@ -45,7 +45,7 @@
 
     <div class="templates">
 
-        <h3>Тесты</h3>
+        <h2>Тесты</h2>
 
         <button id="schedule_test">Назначить тест</button>
 
@@ -57,16 +57,20 @@
                 <th>Название</th>
                 <th>Тип</th>
                 <th>Статус</th>
-                <th>Оценка</th>
-                <th>Пройти</th>
+                <th>Оценка руководителя</th>
+                <th>Оценка сотрудника</th>
+                <th>Ссылка</th>
+                <th>Отчет</th>
             </tr>
             {% for grade in scheduled_to_user %}
                 <tr>
                     <td>{{ grade.grade_template.name }}</td>
                     <td>{{ constance.GRADE_TEMPLATE_TYPES_DICT|get_item:grade.grade_template.type }}</td>
                     <td>{{ constance.GRADE_STATUS_DICT|get_item:grade.status }}</td>
-                    <td></td>
-                    <td><a href="grade{{ grade.grade_template.id }}">Пройти</a></td>
+                    <td>{{ grade.owner_score }}</td>
+                    <td>{{ grade.subordinate_score }}</td>
+                    <td><a href="grade{{ grade.grade_template.id }}_{{ grade.id }}">Пройти</a></td>
+                    <td><a href="report{{ grade.id }}">Отчет</a></td>
                 </tr>
             {% endfor %}
         </table>
@@ -77,14 +81,20 @@
                 <th>Название</th>
                 <th>Тип</th>
                 <th>Статус</th>
-                <th>Оценка</th>
+                <th>Оценка руководителя</th>
+                <th>Оценка сотрудника</th>
+                <th>Ссылка</th>
+                <th>Отчет</th>
             </tr>
             {% for grade in scheduled_by_user %}
                 <tr>
                     <td>{{ grade.grade_template.name }}</td>
                     <td>{{ constance.GRADE_TEMPLATE_TYPES_DICT|get_item:grade.grade_template.type }}</td>
                     <td>{{ constance.GRADE_STATUS_DICT|get_item:grade.status }}</td>
-                    <td></td>
+                    <td>{{ grade.owner_score }}</td>
+                    <td>{{ grade.subordinate_score }}</td>
+                    <td><a href="grade{{ grade.grade_template.id }}_{{ grade.id }}">Пройти</a></td>
+                    <td><a href="report{{ grade.id }}">Отчет</a></td>
                 </tr>
             {% endfor %}
         </table>

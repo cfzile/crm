@@ -42,6 +42,14 @@ class Question(models.Model):
                                    on_delete=models.CASCADE, null=True)
 
 
+class Answer(models.Model):
+    question = models.ForeignKey(Question, related_name='a_question', related_query_name='a_question',
+                                 on_delete=models.CASCADE, null=False)
+    answer_t1 = models.CharField(max_length=100, default='', null=True)
+    answer_t2 = models.ForeignKey(Indicator, related_name='answer_indicator', related_query_name='answer_indicator',
+                                  on_delete=models.CASCADE, null=True)
+
+
 class GradeTemplate(models.Model):
     owner = models.ForeignKey(Profile, related_name='owner', related_query_name='owner',
                               on_delete=models.CASCADE, null=True)
@@ -59,6 +67,8 @@ class Schedule(models.Model):
     date_from = models.DateTimeField(null=False)
     date_to = models.DateTimeField(null=False)
     status = models.IntegerField(null=False, default=0)
+    owner_score = models.IntegerField(null=True, default=0)
+    subordinate_score = models.IntegerField(null=True, default=0)
 
 
 class Task(models.Model):
@@ -73,3 +83,15 @@ class Task(models.Model):
     grade_template = models.ForeignKey(GradeTemplate, related_name='task_grade_template',
                                        related_query_name='task_grade_template',
                                        on_delete=models.CASCADE, null=True)
+
+
+class GradeResults(models.Model):
+    grade_template = models.ForeignKey(GradeTemplate, related_name='result_grade_template',
+                                       related_query_name='result_grade_template',
+                                       on_delete=models.CASCADE, null=True)
+    answers = models.ManyToManyField(Answer())
+    executor = models.ForeignKey(Profile, related_name='result_grade_profile',
+                                 related_query_name='result_grade_profile',
+                                 on_delete=models.CASCADE, null=True)
+    owner_score = models.IntegerField(null=True, default=0)
+    subordinate_score = models.IntegerField(null=True, default=0)

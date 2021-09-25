@@ -7,26 +7,34 @@
 {% endblock %}
 
 {% block content %}
-    <div class="templates" style="float:left">
-        <h1>{{ grade.name }}</h1> <br>
-        {% for question in grade.questions.all %}
-            <div class="item">
-                {% if question.type == 1 %}
-                    <label>{{ question.description }}</label><br>
-                    <input type="text" name="a{{ question.id }}"><br>
-                {% else %}
-                    <label>{{ question.competence.name }}:</label><br>
-                    {% for indicator in question.competence.indicators.all %}
-                        <input type="radio" name="i{{ question.id }}" value="{{ indicator.value }}">{{ indicator.name }}
-                        <br>
-                    {% endfor %}
-                {% endif %}
-            </div>
-        {% endfor %}
+    <div class="templates" style="float:left; width: 100%">
+        <form action="{% url 'pass_grade' %}" method="post">
+            <h1>{{ grade.name }}</h1> <br>
+            {% csrf_token %}
+            <input type="hidden" name="grade_template" value="{{ grade.id }}">
+            <input type="hidden" name="schedule" value="{{ schedule.id }}">
+            {% for question in grade.questions.all %}
+                <div class="item">
+                    {% if question.type == 1 %}
+                        <label>{{ question.description }}</label><br>
+                        <input type="text" name="ans_{{ question.id }}"><br>
+                    {% else %}
+                        <label>{{ question.competence.name }}:</label><br>
+                        {% for indicator in question.competence.indicators.all %}
+                            <input type="radio" name="indicator_{{ question.id }}" value="{{ indicator.id }}">
+                            {{ indicator.name }}
+                            <br>
+                        {% endfor %}
+                    {% endif %}
+                </div><br>
+            {% endfor %}
 
-        <div class="item">
-            <input type="submit" value="Отправить">
-        </div>
+            {% if pass_allow %}
+                <div class="item">
+                    <input type="submit" value="Отправить">
+                </div>
+            {% endif %}
+        </form>
     </div>
 
 {% endblock %}

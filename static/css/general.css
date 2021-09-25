@@ -6,6 +6,7 @@ body {
 }
 
 header {
+    position: fixed;
     display: inline-block;
     width: 16%;
     height: 100%;
@@ -15,13 +16,14 @@ header {
 }
 
 header #logo {
-    margin-top: 10%;
+    margin-top: 20%;
     margin-bottom: 10%;
     display: inline-block;
-    text-transform: lowercase;
-    font-size: 2em;
+    text-transform: uppercase;
+    font-size: 3em;
     color: #f4f4f4;
     width: 100%;
+    font-weight: bold;
     text-align: center;
     vertical-align: middle;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -54,6 +56,8 @@ header menu {
 header menu li {
     display: inline-block;
     margin-right: 5%;
+    margin-top: 10%;
+    text-decoration: underline;
 }
 
 header menu li a {
@@ -67,6 +71,7 @@ header menu li a {
     width: 70%;
     height: 90%;
     float: left;
+    margin-left: 20%;
 }
 
 header .searching form {
@@ -118,16 +123,14 @@ header .searching form {
     box-shadow: none;
 }
 
-.additional_windows form .item
-{
+.additional_windows form .item {
     display: inline-block;
     text-align: left;
     width: 40%;
 }
 
 .additional_windows form label,
-#create_competence_form form label
-{
+#create_competence_form form label {
     margin-top: 10%;
     margin-bottom: 5%;
     display: inline-block;
@@ -145,8 +148,7 @@ header .searching form {
 }
 
 .additional_windows input[type="submit"],
-#create_competence_form input[type="submit"]
-{
+#create_competence_form input[type="submit"] {
     margin-top: 5%;
     text-align: center;
     display: inline-block;
@@ -160,8 +162,7 @@ header .searching form {
 }
 
 .additional_windows .form_button,
-#create_competence_form .form_button
-{
+#create_competence_form .form_button {
     margin-top: 5%;
     text-align: center;
     display: inline-block;
@@ -172,4 +173,23 @@ header .searching form {
     border: 1px solid grey;
     background: red;
     color: white;
+}
+
+header .out {
+    display: inline-block;
+    width: 100%;
+}
+
+header button {
+    text-transform: uppercase;
+    display: inline-block;
+    width: 80%;
+    border: 0;
+    padding: 5%;
+    bottom: 1%;
+    border-radius: 5px;
+    color: white;
+    position: absolute;
+    background: #013440;
+    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 }

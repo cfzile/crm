@@ -10,7 +10,7 @@ from django.template import loader
 import crm.events as events
 from crm import constance
 from crm.forms import UserForm, GraderForm
-from crm.models import Profile, Competence, GradeTemplate, Question, Schedule, Indicator, Task
+from crm.models import Profile, Competence, GradeTemplate, Question, Schedule, Indicator, Task, Answer, GradeResults
 
 logger = logging.getLogger('crm')
 
@@ -213,13 +213,62 @@ def schedule_test(request):
 
 
 def pass_grade(request):
-    return None
+    if request.method == 'POST':
+        gt_id = request.POST.get('grade_template')
+        results = GradeResults.objects.create(executor=Profile.objects.get(user_id=request.user.id),
+                                              grade_template=GradeTemplate.objects.get(id=gt_id))
+        score = 0
+        for key in request.POST.keys():
+            t1 = 'ans_'
+            t2 = 'indicator_'
+            if key[:len(t1)] == t1:
+                q_id = key[len(t1):]
+                answer = Answer.objects.create(question=Question.objects.get(id=q_id), answer_t1=request.POST.get(key))
+                answer.save()
+                results.answers.add(answer)
+
+            if key[:len(t2)] == t2:
+                q_id = key[len(t2):]
+                indicator = Indicator.objects.get(id=request.POST.get(key))
+                q = Question.objects.get(id=q_id)
+                answer = Answer.objects.create(question=q,
+                                               answer_t2=indicator)
+                score += indicator.value
+                # total += max([i.value for i in q.competence.indicators.all()])
+                answer.save()
+                results.answers.add(answer)
+
+        sch = Schedule.objects.get(id=request.POST.get('schedule'))
+        sch.status = 1
+
+        if request.user.id == sch.owner:
+            results.owner_score = score
+            sch.owner_score = score
+        if request.user.id == sch.subordinate:
+            results.subordinate_score = score
+            sch.subordinate_score = score
+
+        sch.save()
+        results.save()
+
+    return redirect('grade')
 
 
-def get_grade(request, test_id):
+def get_grade(request, test_id, scheduled=None):
+    schedule = None
+    pass_allow = False
+    if scheduled is not None:
+        schedule = Schedule.objects.filter(id=scheduled)
+        if schedule.count() != 0:
+            schedule = schedule[0]
+            if schedule.owner == request.user.id or schedule.subordinate == request.user.id:
+                if GradeResults.objects.all().filter(executor_id=request.user.id).count() == 0:
+                    pass_allow = True
     return render(request, "pages/show_test.html",
                   get_full_context(request, {'Title': 'Пройдите тест',
                                              'grade': GradeTemplate.objects.get(id=test_id),
+                                             'schedule': schedule,
+                                             'pass_allow': pass_allow,
                                              'competences': Competence.objects.all()}))
 
 
@@ -258,3 +307,8 @@ def add_subordinate(request):
         profile.save()
 
     return redirect('/')
+
+
+def get_report(request, schedule_id):
+    return render(request, "pages/report.html",
+                  get_full_context(request, {'Title': 'Отчет'}))
