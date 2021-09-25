@@ -2,6 +2,16 @@
 
 Проект размещен по адресу http://20.42.101.164/
 
+Примеры аккаунтов:
+
+```
+login: cafe
+password: cafe
+
+login: cafe_subordinate
+password: cafe
+```
+
 ## Ручной запуск
 
 Установить необходимые библиотеки из requirements.txt
