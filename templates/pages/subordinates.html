@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+
+{% load general %}
+{% load static %}
+
+{% block header %}
+    <link rel="stylesheet" href="{% static "css/forms.css" %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+
+    <div class="templates">
+        <form class="login" method="post" action="{% url 'add_subordinate' %}">
+            <h3>Добавить подчиненного</h3>
+            <select name="add_subordinate">
+                {% for profile in profiles %}
+                    <option value="{{ profile.user.id }}">{{ profile.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Добавить">
+        </form>
+    </div>
+
+{% endblock %}

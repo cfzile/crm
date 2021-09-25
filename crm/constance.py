@@ -10,7 +10,7 @@ EVENT_ERROR = "Ошибка"
 SUCCESSFUL = "Операция прошла успешно."
 PAGES = [['Профиль', 'home'], ['Задачи', 'tasks'], ['Тесты', 'grade'],
          # ['События', 'events'],
-         ['Шаблоны', 'grade_templates']]
+         ['Шаблоны', 'grade_templates'], ['Подчиненные', 'subordinates']]
 
 GRADE_TEMPLATE_TYPES_LIST = [(0, 'авто'), (1, 'оценка сотрудником'), (1, 'самооценка')]
 GRADE_TEMPLATE_TYPES_DICT = {i[0]: i[1] for i in GRADE_TEMPLATE_TYPES_LIST}

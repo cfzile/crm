@@ -18,5 +18,7 @@ urlpatterns = [
     path('sign_out', views.sign_out, name='sign_out'),
     path('tasks', views.tasks, name='tasks'),
     path('grade', views.grade, name='grade'),
+    path('subordinates', views.subordinates, name='subordinates'),
     path('grade_templates', views.grade_templates, name='grade_templates'),
+    path('add_subordinate', views.add_subordinate, name='add_subordinate'),
 ]

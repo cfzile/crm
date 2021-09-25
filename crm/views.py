@@ -36,7 +36,8 @@ def get_full_context(request, context):
                        'grade_templates': GradeTemplate.objects.all(),
                        'scheduled_to_user': scheduled_to_user,
                        'scheduled_by_user': scheduled_by_user,
-                       'tasks': Task.objects.all()}
+                       'tasks': Task.objects.all(),
+                       'profiles': Profile.objects.all()}
     return {**context, **general_context}
 
 
@@ -243,3 +244,12 @@ def create_task(request):
                             date_from=date_from).save()
 
     return redirect('tasks')
+
+
+def subordinates(request):
+    return render(request, "pages/subordinates.html",
+                  get_full_context(request, {'Title': 'Подчиненные'}))
+
+
+def add_subordinate(request):
+    return None
