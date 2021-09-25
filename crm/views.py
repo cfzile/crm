@@ -24,28 +24,34 @@ def get_full_context(request, context):
     auth_profile = None
     scheduled_to_user = None
     scheduled_by_user = None
+
     if request.user.is_authenticated and request.user.is_superuser and Profile.objects.filter(
             user_id=request.user.id).count() == 0:
         Profile.objects.create(user=request.user).save()
 
+    competences = Competence.objects.all()
+    grade_templates = GradeTemplate.objects.all()
+    tasks = None
     if request.user.is_authenticated:
         auth_profile = Profile.objects.get(user_id=request.user.id)
         auth_profile.subordinates = [Profile.objects.get(user_id=id) for id in auth_profile.subordinates]
         scheduled_to_user = Schedule.objects.all().filter(subordinate=auth_profile.user.id)
         scheduled_by_user = Schedule.objects.all().filter(owner=auth_profile.user.id)
+        tasks = Task.objects.all().filter(Q(owner_id=request.user.id) | Q(executor_id=request.user.id))
+        if auth_profile.prototype != -1:
+            competences = competences.filter(Q(prototype=auth_profile.prototype))
+            grade_templates = grade_templates.filter(Q(prototype=auth_profile.prototype))
 
     general_context = {"events": events.get(request),
                        'constance': constance,
                        'auth_profile': auth_profile,
-                       'competences': Competence.objects.all().filter(
-                           Q(prototype=auth_profile.prototype) | (auth_profile.prototype == -1)),
-                       'grade_templates': GradeTemplate.objects.all().filter(
-                           Q(prototype=auth_profile.prototype) | (auth_profile.prototype == -1)),
+                       'competences': competences,
+                       'grade_templates': grade_templates,
                        'scheduled_to_user': scheduled_to_user,
                        'scheduled_by_user': scheduled_by_user,
-                       'tasks': Task.objects.all().filter(
-                           Q(owner_user_id=request.user.id) | Q(executor_user_id=request.user.id)),
+                       'tasks': tasks,
                        'profiles': Profile.objects.all()}
+
     return {**context, **general_context}
 
 
