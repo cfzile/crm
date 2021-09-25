@@ -240,6 +240,7 @@ def pass_grade(request):
 
         sch = Schedule.objects.get(id=request.POST.get('schedule'))
         sch.status = 1
+        results.schedule_id = sch.id
 
         if request.user.id == sch.owner:
             results.owner_score = score
@@ -262,7 +263,7 @@ def get_grade(request, test_id, scheduled=None):
         if schedule.count() != 0:
             schedule = schedule[0]
             if schedule.owner == request.user.id or schedule.subordinate == request.user.id:
-                if GradeResults.objects.all().filter(executor_id=request.user.id).count() == 0:
+                if GradeResults.objects.all().filter(executor_id=request.user.id, schedule_id=schedule.id).count() == 0:
                     pass_allow = True
     return render(request, "pages/show_test.html",
                   get_full_context(request, {'Title': 'Пройдите тест',
@@ -287,10 +288,15 @@ def create_task(request):
         except:
             pass
 
+        sch = Schedule.objects.create(grade_template=grade_template_obj, owner=owner, subordinate=executor,
+                                      date_from=date_from, date_to=date_to)
+        sch.save()
+
         Task.objects.create(owner=Profile.objects.get(user_id=owner), description=description,
                             grade_template=grade_template_obj,
                             executor=Profile.objects.get(user_id=executor), date_to=date_to,
-                            date_from=date_from).save()
+                            date_from=date_from,
+                            schedule_id=sch.id).save()
 
     return redirect('tasks')
 

@@ -78,7 +78,7 @@
                     <td>{{ task.date_to }}</td>
                     <td>{{ task.owner.name }}</td>
                     <td>{{ task.executor.name }}</td>
-                    <td><a href="grade{{ task.grade_template.id }}">{{ task.grade_template.name }}</a></td>
+                    <td><a href="grade{{ task.grade_template.id }}_{{ task.schedule_id }}">{{ task.grade_template.name }}</a></td>
                 </tr>
             {% endfor %}
         </table>

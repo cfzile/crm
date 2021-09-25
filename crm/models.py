@@ -83,12 +83,14 @@ class Task(models.Model):
     grade_template = models.ForeignKey(GradeTemplate, related_name='task_grade_template',
                                        related_query_name='task_grade_template',
                                        on_delete=models.CASCADE, null=True)
+    schedule_id = models.IntegerField(null=False, default=0)
 
 
 class GradeResults(models.Model):
     grade_template = models.ForeignKey(GradeTemplate, related_name='result_grade_template',
                                        related_query_name='result_grade_template',
                                        on_delete=models.CASCADE, null=True)
+    schedule_id = models.IntegerField(null=False, default=0)
     answers = models.ManyToManyField(Answer())
     executor = models.ForeignKey(Profile, related_name='result_grade_profile',
                                  related_query_name='result_grade_profile',
