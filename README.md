@@ -1,4 +1,4 @@
-# CRM-system
+# Get Brain (CRM-system)
 
 Проект размещен по адресу http://20.42.101.164/
 
