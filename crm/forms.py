@@ -1,11 +1,13 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from crm.models import GradeTemplate, Competence
+from crm.constance import GRADE_TEMPLATE_TYPES_LIST
+from crm.models import GradeTemplate
 
 
 class UserForm(forms.ModelForm):
-    username = forms.CharField(label='', help_text='', widget=forms.TextInput(attrs={'placeholder': 'ФИО'}))
+    username = forms.CharField(label='', help_text='', widget=forms.TextInput(attrs={'placeholder': 'username/email'}))
+    name = forms.CharField(label='', help_text='', widget=forms.TextInput(attrs={'placeholder': 'ФИО'}))
     password = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Пароль', 'type': 'password'}))
     password_repeat = forms.CharField(label='', widget=forms.TextInput(
         attrs={'placeholder': 'Повторите пароль', 'type': 'password'}))
@@ -19,12 +21,12 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'password_repeat', 'email')
+        fields = ('username', 'email', 'password', 'password_repeat')
 
 
 class GraderForm(forms.ModelForm):
     name = forms.CharField(label='Название', help_text='', widget=forms.TextInput(attrs={'placeholder': 'название'}))
-    type = forms.ChoiceField(label='Тип', choices=[(0, 'авто'), (1, 'оценка сотрудником'), (1, 'самооценка')], widget=forms.Select)
+    type = forms.ChoiceField(label='Тип', choices=GRADE_TEMPLATE_TYPES_LIST, widget=forms.Select)
 
     class Meta:
         model = GradeTemplate

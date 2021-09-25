@@ -12,6 +12,11 @@ def events_clear(request):
     return ""
 
 
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
 @register.simple_tag
 def media(url):
     if settings.DEBUG:

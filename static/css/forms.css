@@ -1,0 +1,56 @@
+
+form {
+    background: white;
+    display: inline-block;
+    width: 40%;
+    margin-left: 30%;
+    height: 90%;
+    margin-top: 3%;
+    /*vertical-align: middle;*/
+    text-align: center;
+    overflow: auto;
+}
+
+form input[type="text"], form select {
+    width: 100%;
+    padding: 3% 8%;
+    box-shadow: none;
+}
+
+form .item {
+    display: inline-block;
+    text-align: left;
+    width: 40%;
+}
+
+form label {
+    margin-top: 10%;
+    margin-bottom: 5%;
+    display: inline-block;
+}
+
+input[type="submit"] {
+    margin-top: 5%;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    padding: 3% 8%;
+    text-transform: lowercase;
+    font-size: 1em;
+    border: 1px solid grey;
+    background: green;
+    color: white;
+}
+
+.form_button {
+    margin-top: 5%;
+    text-align: center;
+    display: inline-block;
+    width: 83%;
+    padding: 3% 8%;
+    text-transform: lowercase;
+    font-size: 1em;
+    border: 1px solid grey;
+    background: red;
+    color: white;
+}

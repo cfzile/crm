@@ -1,25 +1,101 @@
 {% extends 'index.html' %}
 
+{% load general %}
+
 {% block content %}
-    <button id="">Назначить "оценку" подчиненному</button>
+    <div class="additional_windows" id="schedule_test_form">
+        <form method="post" action="{% url 'schedule_test' %}">
+            {% csrf_token %}
+            <h1>Назначить тест</h1>
+            <div class="item">
+                <label>Тест:</label><br>
+                <select name="grade_template">
+                    {% for grade in grade_templates %}
+                        <option value="{{ grade.id }}">{{ grade.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="item">
+                <label>Подчиненный:</label><br>
+                <select name="subordinate">
+                    {% for subordinate in auth_profile.subordinates %}
+                        <option value="{{ subordinate.user.id }}">{{ subordinate.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="item">
+                <label>Старт:</label>
+                <input type="datetime-local" name="from">
+            </div>
+            <div class="item">
+                <label>Финиш:</label>
+                <input type="datetime-local" name="to">
+            </div>
 
-    Мне назначенные:
-    <table>
-        <tr>
-            <th>Название</th>
-            <th>Тип</th>
-            <th>Статус</th>
-            <th>Оценка</th>
-        </tr>
-    </table>
+            <div class="item">
+                <input type="submit" value="Назначить">
+            </div>
+            <br>
+            <div class="item">
+                <div class="form_button" id="close_schedule_test_form">Отмена</div>
+            </div>
 
-    Мною назначенные:
-    <table>
-        <tr>
-            <th>Название</th>
-            <th>Тип</th>
-            <th>Статус</th>
-            <th>Оценка</th>
-        </tr>
-    </table>
+        </form>
+    </div>
+
+    <div class="templates">
+
+        <h3>Тесты</h3>
+
+        <button id="schedule_test">Назначить тест</button>
+
+        <br>
+
+        Мне назначенные:
+        <table>
+            <tr>
+                <th>Название</th>
+                <th>Тип</th>
+                <th>Статус</th>
+                <th>Оценка</th>
+                <th>Пройти</th>
+            </tr>
+            {% for grade in scheduled_to_user %}
+                <tr>
+                    <td>{{ grade.grade_template.name }}</td>
+                    <td>{{ constance.GRADE_TEMPLATE_TYPES_DICT|get_item:grade.grade_template.type }}</td>
+                    <td>{{ constance.GRADE_STATUS_DICT|get_item:grade.status }}</td>
+                    <td></td>
+                    <td><a href="grade{{ grade.grade_template.id }}">Пройти</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        Мною назначенные:
+        <table>
+            <tr>
+                <th>Название</th>
+                <th>Тип</th>
+                <th>Статус</th>
+                <th>Оценка</th>
+            </tr>
+            {% for grade in scheduled_by_user %}
+                <tr>
+                    <td>{{ grade.grade_template.name }}</td>
+                    <td>{{ constance.GRADE_TEMPLATE_TYPES_DICT|get_item:grade.grade_template.type }}</td>
+                    <td>{{ constance.GRADE_STATUS_DICT|get_item:grade.status }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <script type="text/javascript">
+            $('#schedule_test').on('click', function () {
+                $('#schedule_test_form').css('display', 'inline-block');
+            });
+
+            $('#close_schedule_test_form').on('click', function () {
+                $('#schedule_test_form').css('display', 'none');
+            });
+        </script>
+    </div>
 {% endblock %}

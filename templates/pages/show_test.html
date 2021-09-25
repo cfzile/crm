@@ -1,0 +1,31 @@
+{% extends 'index.html' %}
+{% load general %}
+{% load static %}
+
+{% block header %}
+    <link rel="stylesheet" href="{% static "css/forms.css" %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="templates" style="float:left">
+        <h1>{{ grade.name }}</h1> <br>
+        {% for question in grade.questions.all %}
+            <div class="item">
+                {% if question.type == 1 %}
+                    <label>{{ question.description }}</label><br>
+                    <input type="text" name="a{{ question.id }}"><br>
+                {% else %}
+                    <label>{{ question.competence.name }}:</label><br>
+                    {% for indicator in question.competence.indicators.all %}
+                        <input type="radio" name="i{{ question.id }}" value="{{ indicator.value }}">{{ indicator.name }}
+                        <br>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="item">
+            <input type="submit" value="Отправить">
+        </div>
+    </div>
+
+{% endblock %}

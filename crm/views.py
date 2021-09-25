@@ -10,19 +10,32 @@ from django.template import loader
 import crm.events as events
 from crm import constance
 from crm.forms import UserForm, GraderForm
-from crm.models import Profile, Competence
+from crm.models import Profile, Competence, GradeTemplate, Question, Schedule, Indicator
 
 logger = logging.getLogger('crm')
 
 
 def get_full_context(request, context):
     auth_profile = None
+    scheduled_to_user = None
+    scheduled_by_user = None
     if request.user.is_authenticated and request.user.is_superuser and Profile.objects.filter(
             user_id=request.user.id).count() == 0:
         Profile.objects.create(user=request.user).save()
+
     if request.user.is_authenticated:
         auth_profile = Profile.objects.get(user_id=request.user.id)
-    general_context = {"events": events.get(request), 'constance': constance, 'auth_profile': auth_profile}
+        auth_profile.subordinates = [Profile.objects.get(user_id=id) for id in auth_profile.subordinates]
+        scheduled_to_user = Schedule.objects.all().filter(subordinate=auth_profile.user.id)
+        scheduled_by_user = Schedule.objects.all().filter(owner=auth_profile.user.id)
+
+    general_context = {"events": events.get(request),
+                       'constance': constance,
+                       'auth_profile': auth_profile,
+                       'competences': Competence.objects.all(),
+                       'grade_templates': GradeTemplate.objects.all(),
+                       'scheduled_to_user': scheduled_to_user,
+                       'scheduled_by_user': scheduled_by_user}
     return {**context, **general_context}
 
 
@@ -39,6 +52,7 @@ def sign_up(request):
     if request.method == 'POST':
 
         user_form = UserForm(request.POST)
+        user_form.username = request.POST.get('email')
 
         if user_form.is_valid():
 
@@ -46,7 +60,8 @@ def sign_up(request):
                 user = user_form.save(commit=False)
                 user.set_password(user_form.cleaned_data['password'])
                 user.save()
-                Profile.objects.create(user=user, user_type=request.POST.get('user_type'),
+                Profile.objects.create(user=user, name=request.POST.get('name'),
+                                       user_type=request.POST.get('user_type'),
                                        user_position=request.POST.get('user_position'))
 
                 events.add_event(request, {constance.EVENT_INFO: ['Регистация прошла успешно.']})
@@ -67,8 +82,8 @@ def sign_in(request):
         return redirect('/id' + str(request.user.id))
 
     if request.method == 'POST':
-        username = request.POST.get('username')
         password = request.POST.get('password')
+        username = request.POST.get('username')
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
@@ -100,7 +115,7 @@ def profile(request, user_id):
 
     return render(request, "pages/profile.html",
                   get_full_context(request,
-                                   {'Title': requested_profile.user.username,
+                                   {'Title': requested_profile.name,
                                     'requested_profile': requested_profile}))
 
 
@@ -116,6 +131,92 @@ def grade(request):
 
 def grade_templates(request):
     return render(request, "pages/grade_templates.html",
-                  get_full_context(request, {'Title': 'Оценка',
+                  get_full_context(request, {'Title': 'Шаблоны',
                                              'create_grader_form': GraderForm(),
+                                             'competences': Competence.objects.all()}))
+
+
+def add_grader(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        type = request.POST.get('type')
+
+        questions_dict = {i: [None, '', None] for i in range(100)}
+
+        for key in request.POST.keys():
+            if key[:len('t1_q_')] == 't1_q_':
+                ind = len('t1_q_')
+                questions_dict[int(key[ind:])] = [1, request.POST.get('t1_q_' + key[ind:]), None]
+
+            if key[:len('t2_q_')] == 't2_q_':
+                ind = len('t2_q_')
+                questions_dict[int(key[ind:])] = [2, '', int(request.POST.get('t2_q_' + key[ind:]))]
+
+        obj = GradeTemplate.objects.create(name=name, type=type, owner=Profile.objects.get(user_id=request.user.id))
+
+        for key, value in questions_dict.items():
+            if value[0] is None:
+                continue
+            competence = None
+            if value[2] is not None:
+                competence = Competence.objects.get(id=value[2])
+            obj.questions.add(Question.objects.create(type=value[0], description=value[1],
+                                                      competence=competence))
+
+        obj.save()
+
+    return redirect('/grade_templates')
+
+
+def add_competence(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        indicators = {i: [None, None] for i in range(0, 1 + len(request.POST.keys()) // 2)}
+
+        for key in request.POST.keys():
+            if key[:len('indicator_name')] == 'indicator_name':
+                ind = len('indicator_name')
+                indicators[int(key[ind:])][0] = request.POST.get('indicator_name' + key[ind:])
+            if key[:len('indicator_value')] == 'indicator_value':
+                ind = len('indicator_value')
+                indicators[int(key[ind:])][1] = request.POST.get('indicator_value' + key[ind:])
+
+        competence = Competence.objects.create(name=name, description='')
+
+        for key, value in indicators.items():
+            if value[0] is None or value[1] is None:
+                continue  # TODO: error
+            indicator = Indicator.objects.create(name=value[0], value=value[1])
+            indicator.save()
+            competence.indicators.add(indicator)
+
+        competence.save()
+
+    return redirect('/grade_templates')
+
+
+def schedule_test(request):
+    if request.method == 'POST':
+        owner = request.user.id
+        grade_template = request.POST.get('grade_template')
+        subordinate = request.POST.get('subordinate')
+        date_from = request.POST.get('from')
+        date_to = request.POST.get('to')
+
+        print(request.POST.keys())
+        Schedule.objects.create(owner=owner, grade_template=GradeTemplate.objects.get(id=grade_template),
+                                subordinate=subordinate, date_to=date_to,
+                                date_from=date_from).save()
+
+    return redirect('/grade')
+
+
+def pass_grade(request):
+    return None
+
+
+def get_grade(request, test_id):
+    return render(request, "pages/show_test.html",
+                  get_full_context(request, {'Title': 'Пройдите тест',
+                                             'grade': GradeTemplate.objects.get(id=test_id),
                                              'competences': Competence.objects.all()}))
