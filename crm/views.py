@@ -347,48 +347,54 @@ def add_subordinate(request):
 
 
 def get_report(request, schedule_id):
-    sch = Schedule.objects.get(id=schedule_id)
+    try:
+        sch = Schedule.objects.get(id=schedule_id)
 
-    owner_id = sch.owner
-    subordinate_id = sch.subordinate
+        owner_id = sch.owner
+        subordinate_id = sch.subordinate
 
-    answer_ruk = GradeResults.objects.get(schedule_id=schedule_id, executor_id=owner_id)
-    answer_sot = GradeResults.objects.get(schedule_id=schedule_id, executor_id=subordinate_id)
+        answer_ruk = GradeResults.objects.get(schedule_id=schedule_id, executor_id=owner_id)
+        answer_sot = GradeResults.objects.get(schedule_id=schedule_id, executor_id=subordinate_id)
 
-    fig = go.Figure()
+        fig = go.Figure()
 
-    def get_scatter(answer, name):
+        def get_scatter(answer, name):
+            p = 1
+            x, ruk_y = [], []
+            for ans in answer.answers.all():
+                if ans.answer_t2 is None:
+                    continue
+                x.append(p)
+                ruk_y.append(ans.answer_t2.value)
+                p += 1
+
+            return go.Scatter(x=x, y=ruk_y,
+                              mode='markers+lines',
+                              marker=Marker(symbol='0'),
+                              opacity=0.8, name=name)
+
         p = 1
-        x, ruk_y = [], []
-        for ans in answer.answers.all():
+        comps = []
+        for ans in answer_sot.answers.all():
             if ans.answer_t2 is None:
                 continue
-            x.append(p)
-            ruk_y.append(ans.answer_t2.value)
+            comps.append((p, ans.question.competence.name))
             p += 1
 
-        return go.Scatter(x=x, y=ruk_y,
-                          mode='markers+lines',
-                          marker=Marker(symbol='0'),
-                          opacity=0.8, name=name)
+        fig.add_trace(get_scatter(answer_ruk, 'Руководитель'))
+        fig.add_trace(get_scatter(answer_sot, 'Сотрудник'))
 
-    p = 1
-    comps = []
-    for ans in answer_sot.answers.all():
-        if ans.answer_t2 is None:
-            continue
-        comps.append((p, ans.question.competence.name))
-        p += 1
+        plt_div = plot(fig, output_type='div')
 
-    fig.add_trace(get_scatter(answer_ruk, 'Руководитель'))
-    fig.add_trace(get_scatter(answer_sot, 'Сотрудник'))
+        return render(request, "pages/report.html",
+                      get_full_context(request, {'Title': 'Отчет',
+                                                 'schedule': sch,
+                                                 'answer_ruk': answer_ruk,
+                                                 'answer_sot': answer_sot,
+                                                 'graphic': plt_div,
+                                                 'comps': comps}))
 
-    plt_div = plot(fig, output_type='div')
+    except:
+        events.add_event(request, {constance.EVENT_ERROR: ['Недостаточно данных']})
 
-    return render(request, "pages/report.html",
-                  get_full_context(request, {'Title': 'Отчет',
-                                             'schedule': sch,
-                                             'answer_ruk': answer_ruk,
-                                             'answer_sot': answer_sot,
-                                             'graphic': plt_div,
-                                             'comps': comps}))
+    return redirect('grade')
