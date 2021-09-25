@@ -49,7 +49,7 @@
 
         <button id="schedule_test">Назначить тест</button>
 
-        <br>
+        <br><br>
 
         Мне назначенные:
         <table>
@@ -57,8 +57,8 @@
                 <th>Название</th>
                 <th>Тип</th>
                 <th>Статус</th>
-                <th>Оценка руководителя</th>
-                <th>Оценка сотрудника</th>
+                <th>Оценка рук.</th>
+                <th>Оценка сот.</th>
                 <th>Ссылка</th>
                 <th>Отчет</th>
             </tr>
@@ -75,14 +75,16 @@
             {% endfor %}
         </table>
 
+        <br>
         Мною назначенные:
+        <br>
         <table>
             <tr>
                 <th>Название</th>
                 <th>Тип</th>
                 <th>Статус</th>
-                <th>Оценка руководителя</th>
-                <th>Оценка сотрудника</th>
+                <th>Оценка рук.</th>
+                <th>Оценка сот.</th>
                 <th>Ссылка</th>
                 <th>Отчет</th>
             </tr>
@@ -98,6 +100,7 @@
                 </tr>
             {% endfor %}
         </table>
+
         <script type="text/javascript">
             $('#schedule_test').on('click', function () {
                 $('#schedule_test_form').css('display', 'inline-block');
