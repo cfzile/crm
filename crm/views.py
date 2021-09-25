@@ -78,6 +78,7 @@ def sign_up(request):
                 user.save()
                 Profile.objects.create(user=user, name=request.POST.get('name'),
                                        user_type=request.POST.get('user_type'),
+                                       prototype=request.POST.get('prototype'),
                                        user_position=request.POST.get('user_position'))
 
                 events.add_event(request, {constance.EVENT_INFO: ['Регистация прошла успешно.']})
