@@ -196,6 +196,7 @@ def add_grader(request):
 def add_competence(request):
     if request.method == 'POST':
         prototype = Profile.objects.get(user_id=request.user.id).prototype
+        print(prototype)
         if prototype == -1:
             prototype = request.POST.get('prototype')
         name = request.POST.get('name')
