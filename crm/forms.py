@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from crm.constance import GRADE_TEMPLATE_TYPES_LIST
+from crm.constance import GRADE_TEMPLATE_TYPES_LIST, ROLE_LIST
 from crm.models import GradeTemplate
 
 
@@ -12,7 +12,7 @@ class UserForm(forms.ModelForm):
     password_repeat = forms.CharField(label='', widget=forms.TextInput(
         attrs={'placeholder': 'Повторите пароль', 'type': 'password'}))
     email = forms.EmailField(label='', widget=forms.TextInput(attrs={'placeholder': 'e-mail'}))
-    user_type = forms.ChoiceField(label='Роль', choices=[(0, 'сотрудник'), (1, 'клиент')], widget=forms.Select)
+    user_type = forms.ChoiceField(label='Роль', choices=ROLE_LIST, widget=forms.Select)
     user_position = forms.CharField(label='',
                                     widget=forms.TextInput(attrs={'placeholder': 'Должность'}))
 

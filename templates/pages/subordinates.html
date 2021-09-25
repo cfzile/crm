@@ -12,7 +12,8 @@
     <div class="templates">
         <form class="login" method="post" action="{% url 'add_subordinate' %}">
             <h3>Добавить подчиненного</h3>
-            <select name="add_subordinate">
+            {% csrf_token %}
+            <select name="subordinate">
                 {% for profile in profiles %}
                     <option value="{{ profile.user.id }}">{{ profile.name }}</option>
                 {% endfor %}

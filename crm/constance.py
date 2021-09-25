@@ -12,6 +12,9 @@ PAGES = [['Профиль', 'home'], ['Задачи', 'tasks'], ['Тесты', '
          # ['События', 'events'],
          ['Шаблоны', 'grade_templates'], ['Подчиненные', 'subordinates']]
 
-GRADE_TEMPLATE_TYPES_LIST = [(0, 'авто'), (1, 'оценка сотрудником'), (1, 'самооценка')]
+GRADE_TEMPLATE_TYPES_LIST = [(0, 'авто'), (1, 'оценка сотрудником'), (1, 'оценка руководителем')]
 GRADE_TEMPLATE_TYPES_DICT = {i[0]: i[1] for i in GRADE_TEMPLATE_TYPES_LIST}
 GRADE_STATUS_DICT = {0: 'Назначен', 1: 'Пройден'}
+
+ROLE_LIST = [(0, 'руководитель'), (1, 'сотрудник'), (2, 'клиент')]
+ROLE_DICT = {i[0]: i[1] for i in ROLE_LIST}

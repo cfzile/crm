@@ -252,4 +252,9 @@ def subordinates(request):
 
 
 def add_subordinate(request):
-    return None
+    if request.method == 'POST':
+        profile = Profile.objects.get(user_id=request.user.id)
+        profile.subordinates.append(request.POST.get('subordinate'))
+        profile.save()
+
+    return redirect('/')
