@@ -1,5 +1,6 @@
 import logging
 
+from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -8,8 +9,8 @@ from django.template import loader
 
 import crm.events as events
 from crm import constance
-from crm.forms import UserForm
-from crm.models import Profile
+from crm.forms import UserForm, GraderForm
+from crm.models import Profile, Competence
 
 logger = logging.getLogger('crm')
 
@@ -90,8 +91,31 @@ def handler404(request, exception):
     response.status_code = 404
     return response
 
+
 @login_required(login_url='/sign_in')
 def profile(request, user_id):
-    profile = Profile.objects.get(user_id=user_id)
-    print(user_id, profile.user.username)
-    return render(request, "pages/profile.html", get_full_context(request, {'Title': profile.user.username}))
+    requested_profile = Profile.objects.get(user_id=user_id)
+    requested_profile.manager_profiles = [Profile.objects.get(user_id=id) for id in requested_profile.managers]
+    requested_profile.subordinate_profiles = [Profile.objects.get(user_id=id) for id in requested_profile.subordinates]
+
+    return render(request, "pages/profile.html",
+                  get_full_context(request,
+                                   {'Title': requested_profile.user.username,
+                                    'requested_profile': requested_profile}))
+
+
+def tasks(request):
+    return render(request, "pages/tasks.html",
+                  get_full_context(request, {'Title': 'Задачи'}))
+
+
+def grade(request):
+    return render(request, "pages/grade.html",
+                  get_full_context(request, {'Title': 'Оценка'}))
+
+
+def grade_templates(request):
+    return render(request, "pages/grade_templates.html",
+                  get_full_context(request, {'Title': 'Оценка',
+                                             'create_grader_form': GraderForm(),
+                                             'competences': Competence.objects.all()}))

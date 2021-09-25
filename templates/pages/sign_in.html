@@ -1,16 +1,22 @@
 {% extends 'index.html' %}
 
+{% load static %}
+
+{% block header %}
+    <link rel="stylesheet" href="{% static "css/sign_in.css" %}" type="text/css">
+{% endblock %}
+
 {% block content %}
 
 
     <form class="login" method="post" action="{% url 'sign_in' %}">
         <h1>Войти</h1>
         {% csrf_token %}
-        <input type="text" placeholder="username" name="username" maxlength="50" required>
-        <input type="password" placeholder="password" name="password" maxlength="50" required>
-        <a href="" class="forgot_password">Забыли пароль?</a>
-        <input type="submit" value="Войти">
-        <a href="{% url 'sign_up' %}" class="forgot_password">Создать аккаунт</a>
+        <input type="text" placeholder="username" name="username" maxlength="50" required><br><br>
+        <input type="password" placeholder="password" name="password" maxlength="50" required><br><br>
+{#        <a href="" class="forgot_password">Забыли пароль?</a>#}
+        <input type="submit" value="Войти"><br><br>
+        <a href="{% url 'sign_up' %}">Создать аккаунт</a>
     </form>
 
 

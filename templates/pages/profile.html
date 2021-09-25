@@ -1,5 +1,19 @@
 {% extends 'index.html' %}
 
 {% block content %}
+    ФИО: {{ requested_profile.user.username }} <br>
+    Тип пользователя: {{ requested_profile.user_type }} <br>
+    Должность: {{ requested_profile.user_position }} <br>
 
+    Руководители:
+    {% for manager in requested_profile.manager_profiles %}
+        {{ manager.user.username }}<br>
+    {% endfor %}
+
+    <br>
+
+    Подчиненные:
+    {% for subordinate in requested_profile.subordinate_profiles %}
+        {{ subordinate.user.username }}<br>
+    {% endfor %}
 {% endblock %}

@@ -1,5 +1,11 @@
 {% extends 'index.html' %}
 
+{% load static %}
+
+{% block header %}
+    <link rel="stylesheet" href="{% static "css/sign_in.css" %}" type="text/css">
+{% endblock %}
+
 {% block content %}
 
 
@@ -7,9 +13,10 @@
         <h1>Регистрация</h1>
         {% csrf_token %}
         {% for field in user_form %}
-            {{ field }}
+            {{ field }}<br><br>
         {% endfor %}
-        <input type="submit" name="" value="Зарегистрироваться">
+        <input type="submit" name="" value="Зарегистрироваться"><br><br>
+        <a href="{% url 'sign_in' %}" class="forgot_password">Войти</a>
     </form>
 
 

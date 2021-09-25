@@ -22,7 +22,7 @@
         <div id="logo">CRM</div>
         <menu>
             {% for PAGE_NAME, PAGE_URL in constance.PAGES %}
-                <li><a href="{% url PAGE_URL %}">{{ PAGE_NAME }}</a></li>
+                <li><a href="{% url PAGE_URL %}">{{ PAGE_NAME }}</a></li><br>
             {% endfor %}
         </menu>
         <div class="searching">

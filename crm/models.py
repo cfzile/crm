@@ -27,6 +27,19 @@ class Task(models.Model):
     task_status = models.IntegerField(null=False, default=0)
 
 
-class Events(models.Model):
-    event_type = models.IntegerField(null=False)
-    linked_task = models.IntegerField(null=True)
+class Competence(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
+    indicator_names = ArrayField(models.CharField(max_length=100), null=True, default=[])
+    indicator_values = ArrayField(models.IntegerField(null=True, blank=True), null=True, default=[])
+
+
+class Question(models.Model):
+    competence = models.ForeignKey(Competence, related_name='competence', related_query_name='competence',
+                                   on_delete=models.CASCADE)
+
+
+class GradeTemplate(models.Model):
+    name = models.CharField(max_length=100, default='')
+    type = models.IntegerField(null=False)
+    questions = models.ManyToManyField(Question())

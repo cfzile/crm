@@ -10,4 +10,8 @@ urlpatterns = [
     path('sign_in', views.sign_in, name='sign_in'),
     path('sign_up', views.sign_up, name='sign_up'),
     path('sign_out', views.sign_out, name='sign_out'),
+    path('tasks', views.tasks, name='tasks'),
+    # path('events', views.sign_out, name='events'),
+    path('grade', views.grade, name='grade'),
+    path('grade_templates', views.grade_templates, name='grade_templates'),
 ]

@@ -8,4 +8,6 @@ NON_CORRECT_DATA = 'Введены некорректные данные'
 EVENT_INFO = "Инфо."
 EVENT_ERROR = "Ошибка"
 SUCCESSFUL = "Операция прошла успешно."
-PAGES = [['Мой профиль', 'home']]
+PAGES = [['Профиль', 'home'], ['Задачи', 'tasks'], ['Тесты', 'grade'],
+         # ['События', 'events'],
+         ['Шаблоны', 'grade_templates']]

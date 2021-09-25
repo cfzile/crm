@@ -1,0 +1,135 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+    {# create grader form #}
+    <div class="additional_windows" id="create_grader_form">
+        <form>
+            <h1>Создать тест</h1>
+            {% for item in create_grader_form %}
+                <div class="item">
+                    <label>{{ item.label }}:</label><br>
+                    {{ item }} <br>
+                </div><br>
+            {% endfor %}
+            <div id="questions">
+                <div class="item">
+                    <select name="q0" id="q0">
+                        <label>Компетенция</label>
+                        {% for item in competences %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                    </select><br>
+                    <div class="button add_competence" id="q0_button" onclick="add_competence('q0')">Выбрать</div>
+                </div>
+            </div>
+            <div class="button_add_element" id="add_question_t1">Добавить вопрос</div>
+            <div class="button_add_element" id="add_question_t2">Добавить компетенцию</div>
+            <input type="submit" value="Создать" class="button">
+            <div class="button" id="close_create_grader_form">Отмена</div>
+
+            <script type="text/javascript">
+                function add_competence(q_id) {
+                    selected = $('#' + q_id).find(":selected").val()
+                    html_code = '<select name=\"i_' + q_id + "\">";
+                    {% for item in competences %}
+                        if (selected === '{{ item.id }}') {
+                            names = []
+                            {% for name in item.indicator_names %}
+                                names.append(name)
+                            {% endfor %}
+                            values = []
+                            {% for name in item.indicator_values %}
+                                names.append(value)
+                            {% endfor %}
+
+                            for (i = 0; i < names.length; i++) {
+                                html_code += "<option value=\"" + values[i] + "\">" + names[i] + "</option>";
+                            }
+                        }
+                    {% endfor %}
+                    html_code += '</select>';
+                    $('#questions').append(html_code);
+                    $('#' + q_id + '_button').remove();
+                    {#alert(selected);#}
+                    {#$('#questions').append("<select name=\"t2_q_" + num + "\"><option></option>" +#}
+                    {#    "<option value=\"1\">1</option>" +#}
+                    {#    "<option value=\"2\">2</option>" +#}
+                    {#    "<option value=\"3\">3</option>" +#}
+                    {#    "<option value=\"4\">4</option>" +#}
+                    {#    "<option value=\"5\">5</option>" +#}
+                    {#    +"</select><br>");#}
+                }
+
+                $('#add_question_t2').on('click', function () {
+                    var num = ($('#questions').children().length);
+                    $('#questions').append("<div class=\"item\"><label>Компетенция</label><select id=\"q" + num + "\"name=\"q" + num + "\"><option></option>" +
+                        "{% for item in competences %} <option value=\"{{ item.id }}\">{{ item.name }}
+                            </option> {% endfor %}"
+                        + "</select></div><br>");
+                    $('#questions').append('<div class="button add_competence" id="q' + num + '_button" onclick="add_competence(\'q' + num + '\')">Выбрать</div>');
+                });
+                $('#add_question_t1').on('click', function () {
+                    var num = ($('#questions').children().length);
+                    $('#questions').append("<input name=\"t1_q_" + num + "\" type=\"text\"><br>");
+                });
+            </script>
+        </form>
+    </div>
+
+
+    {# create competence form #}
+    <div class="additional_windows" id="create_competence">
+        <form>
+            <input type="text" placeholder="name">
+            <div id="indicators">
+
+            </div>
+            <div class="button" id="add_indicator">Добавить</div>
+            <script type="text/javascript">
+                $('#add_indicator').on('click', function () {
+                    var num = ($('#indicators').children().length) / 2;
+                    $('#indicators').append('<input type="text" id="in' + num + '"><input type="number" id="iv_' + num + '">');
+                });
+            </script>
+            <input type="submit" value="Создать">
+        </form>
+    </div>
+
+
+    <div class="templates">
+        <h3>Тесты</h3>
+        <button id="create_grader">Создать тест</button>
+        <table>
+            <tr>
+                <th>Название</th>
+                <th>Тип</th>
+                <th>Посмотреть</th>
+            </tr>
+        </table>
+    </div>
+
+    <div class="templates">
+        <h3>Компетенции</h3>
+        <button id="create_competence">Создать компетенцию</button>
+        <table>
+            <tr>
+                <th>Название</th>
+                <th>Количество индикаторов</th>
+                <th>Посмотреть</th>
+            </tr>
+        </table>
+    </div>
+
+
+    {# buttons scripts #}
+    <script type="text/javascript">
+        $('#create_grader').on('click', function () {
+            $('#create_grader_form').css('display', 'inline-block');
+        });
+
+        $('#close_create_grader_form').on('click', function () {
+            $('#create_grader_form').css('display', 'none');
+        });
+    </script>
+{% endblock %}
