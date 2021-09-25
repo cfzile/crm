@@ -8,8 +8,10 @@
             integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <link rel="stylesheet" href="{% static "css/general.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% static "css/general.css" %}" type="text/css">
     <link rel="stylesheet" href="{% static "css/events.css" %}" type="text/css">
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'img/favicon.ico' %}"/>
+
     {% block header %}
     {% endblock %}
 </head>
@@ -27,7 +29,9 @@
             {% endfor %}
         </menu>
         <div class="out" style="position:absolute; left:0;bottom:0;">
-            <a href="{% url "sign_out" %}"><button>Выход</button></a>
+            <a href="{% url "sign_out" %}">
+                <button>Выход</button>
+            </a>
         </div>
     </header>
 {% endif %}
