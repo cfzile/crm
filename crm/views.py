@@ -155,7 +155,9 @@ def grade_templates(request):
 
 def add_grader(request):
     if request.method == 'POST':
-        prototype = request.POST.get('prototype')
+        prototype = Profile.objects.get(user_id=request.user.id).prototype
+        if prototype == -1:
+            prototype = request.POST.get('prototype')
         name = request.POST.get('name')
         type = request.POST.get('type')
 
@@ -193,7 +195,9 @@ def add_grader(request):
 
 def add_competence(request):
     if request.method == 'POST':
-        prototype = request.POST.get('prototype')
+        prototype = Profile.objects.get(user_id=request.user.id).prototype
+        if prototype == -1:
+            prototype = request.POST.get('prototype')
         name = request.POST.get('name')
         indicators = {i: [None, None] for i in range(0, 1 + len(request.POST.keys()) // 2)}
 
