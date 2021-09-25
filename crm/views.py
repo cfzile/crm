@@ -335,8 +335,13 @@ def subordinates(request):
 def add_subordinate(request):
     if request.method == 'POST':
         profile = Profile.objects.get(user_id=request.user.id)
-        profile.subordinates.append(request.POST.get('subordinate'))
+        subordinate = Profile.objects.get(user_id=request.POST.get('subordinate'))
+        if subordinate.user.id not in set(profile.subordinates):
+            profile.subordinates.append(subordinate.user.id)
+        if request.user.id not in set(subordinate.managers):
+            subordinate.managers.append(request.user.id)
         profile.save()
+        subordinate.save()
 
     return redirect('/')
 
