@@ -21,7 +21,7 @@
 
 {% if auth_profile.user.is_authenticated %}
     <header>
-        <div id="logo"><img src="{% static 'img/logo.png' %}" width="100%"></div>
+        <div id="logo"><img src="{% static 'img/logo.jpg' %}" width="80%"></div>
         <menu>
             {% for PAGE_NAME, PAGE_URL in constance.PAGES %}
                 <li><a style="{% if chosen_page == PAGE_NAME %}color:#175da3; text-decoration: underline;{% endif %}"
